@@ -1,1 +1,1 @@
-使用qemu启动Busybox和linux内核
+浣跨敤qemu鍦˙usybox涓婅繍琛宭inux鍐呮牳
