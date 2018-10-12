@@ -1,0 +1,32 @@
+1.github linux上下载 linux-4.4内核源码
+	解压linux-4.4
+	cd linux-4.4
+	make defconfig
+	make -j4
+
+2.安装qemu
+	sudo apt-get install qemu
+	qemu-system-x86_64（测试是否安装成功）
+
+3.http://www.busybox.net/  下载busybox （version1.28）
+
+	解压busybox-1.28
+	cd busybox-1.28
+	make menuconfig
+	选择 Busybox Settings  --->   Build Options  ---> [ ] Build BusyBox as a static binary (no shared libs)
+	按y即为选中
+	保存退出 
+	make -j4
+
+4.构建根文件系统(任何一个目录下)
+	dd if=/dev/zero of=rootfs.img bs=4096 count=1024
+	mkdir tempmount
+	mkfs.ext4 -F -L linuxroot rootfs.img
+	sudo mount -o loop rootfs.img tempmount
+	进入Busybox的编译目录
+	sudo make install CONFIG_PREFIX=/path to/tempmount  （上面新建tempmount的绝对路径）
+	sudo umount tempmount
+
+5.启动busybox
+	qemu-system-x86_64  -kernel /home/wk/Downloads/linux-4.4/arch/x86/boot/bzImage -hda /home/wk/test_qemu/rootfs.img  -serial stdio -append "root=/dev/sda init=/bin/ash"  （bzImage和rootfs.img的路径为本机中文件的结对路径）
+	ls命令能够使用则为成功
